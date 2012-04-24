@@ -1,6 +1,9 @@
 zencat
 ======
 
+Please note that at the moment this is VERY VERY half-baked and should probably 
+not be used by anyone. 
+
 As in `cat` to IRC to interact with Zenoss.
 
 zencat listens on a specific IP:port the same way IRCcat does. In addition,
