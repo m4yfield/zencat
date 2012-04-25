@@ -13,9 +13,8 @@ Currently it can be used to list, acknowledge, and unacknowledge Zenoss events.
 
 Installation
 ------------
-Edit the zencat.xml so it knows which irc server, channel etc..
-Edit the JsonApi.java so it knows which Zenoss server and user.
-Check you have sun jvm >=1.5 (java -version)
+Edit the zencat.xml so it knows which irc server, channel, zenoss instance, etc.
+Check you have sun jvm >=1.5 (java -version) and netcat installed.
 
 This will build and package zencat as a jar:
 
@@ -25,14 +24,13 @@ Then, using the appropriate config file:
 
 $ ant -Dconfigfile=./examples/zencat.xml run
 
-Also, you'll want to install netcat.
-
 
 Sending text to IRC
 -------------------
-By default zencat listens on 127.0.0.1:54321, and sends data to the 
-#noc channel.  In a networked server environment you will 
-probably want to make it listen on the private LAN interface.
+By default zencat listens on 127.0.0.1:54321, and sends data to the #noc 
+channel. The default channel can be changed in the config file. In a networked 
+server environment you will probably want to make it listen on the private LAN 
+interface.
 
 Examples: 
 
@@ -78,10 +76,10 @@ There are a handful of built-in commands for instructing the bot at runtime.
 Built-in commands are prefixed with a !
 
 	!join #chan pass		- joins another channel. pass is optional
-	!part #chan				- parts chan
-	!channels				- lists channels the bot is in
+	!part #chan			- parts chan
+	!channels			- lists channels the bot is in
 	!spam blah blah..		- repeats your message in all joined channels
-	!exit					- System.exit()
+	!exit				- System.exit()
 
 Zenoss commands
 -----------------
@@ -96,11 +94,12 @@ Zenoss commands are also prefixed with a !
 Trust
 -----
 
-Any command (?.. !..) uttered in a channel with zencat in is executed and 
-implicitly trusted. 
+By default, any command (?.. !..) uttered in a channel with zencat in is executed and 
+implicitly trusted. The config file can also be changed to only accept commands 
+from a given list of users. 
 
 Any command PMed to zencat is ignored unless the user 
-is joined to the #noc channel.
+is joined to the default channel.
 
 
 SVN commit notifications
@@ -141,14 +140,14 @@ And in contacts.cfg:
 
 define contact{
         contact_name                    zencat
-        alias                   zencat
+        alias                   	zencat
         service_notification_period     24x7
         host_notification_period        24x7
         service_notification_options    w,c,r
         host_notification_options       d,r
         service_notification_commands service-notify-by-irc
         host_notification_commands  host-notify-by-irc
-        email   blah@blah
+        email   			blah@blah
 }
 
 Feedback
