@@ -165,6 +165,7 @@ public class JsonApi {
 	return (JSONObject) this.routerRequest("EventsRouter", "unacknowledge", data).get("result");
     }
 
+<<<<<<< HEAD
     // CLOSE ZENOSS EVENT
     public JSONObject closeEvent(String evid) throws Exception {
 	HashMap data = new HashMap();
@@ -174,6 +175,8 @@ public class JsonApi {
 	return (JSONObject) this.routerRequest("EventsRouter", "close", data).get("result");
     }
 
+=======
+>>>>>>> 1d88f6a8fb69e418d3175c92994b7aadb5812fb0
     public JSONObject getEvents() throws Exception {
         return getEvents(null, null, null);
     }

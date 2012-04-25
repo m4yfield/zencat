@@ -390,6 +390,7 @@ public class ZenCat extends PircBot {
                         }
                 }
 
+<<<<<<< HEAD
 		// CLOSE AN EVENT
 		if (method.equals("close") && toks.length == 2) {
 			String evid = toks[1];
@@ -401,6 +402,8 @@ public class ZenCat extends PircBot {
 			}
 		}
 
+=======
+>>>>>>> 1d88f6a8fb69e418d3175c92994b7aadb5812fb0
 		// SHOW ALL EVENTS
 		if (method.equals("events")) {
 			sendMessage("#noc", "ALL CURRENT ZENOSS EVENTS:");
