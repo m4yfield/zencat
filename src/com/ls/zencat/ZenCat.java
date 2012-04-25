@@ -43,6 +43,7 @@ public class ZenCat extends PircBot {
 	private String instance;
 	private String user;
 	private String password;
+	private String[] trustList;
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -117,7 +118,8 @@ public class ZenCat extends PircBot {
 		instance = config.getString("zenoss.instance");
 		user = config.getString("zenoss.username");
 		password = config.getString("zenoss.password");
-		ja = new JsonApi(instance,user,password);
+		ja = new JsonApi(instance, user, password);
+
 
 		try {
 			// connect to server
@@ -198,7 +200,12 @@ public class ZenCat extends PircBot {
 
     public void sendMsg(String t, String m) {
             m = mIRCify(m);
-            super.sendNotice(t, m);
+            super.sendMessage(t, m);
+    }
+
+    public void sendNot(String t, String m) {
+	m = mIRCify(m);
+	super.sendNotice(t, m);
     }
 
     public String mIRCify(String m) {
@@ -259,10 +266,19 @@ public class ZenCat extends PircBot {
 		// we were kicked
 	}
 
-	// is this nick trusted? (are they in the default channel)
+	// is this nick trusted? 
 	private boolean isTrusted(String n){
-		//return true
-		User[] users = getUsers(getDefaultChannel());
+		User[] users = new User[0];
+		if (config.getString("trust.trusted").equals("false")) {
+			String userList = config.getString("trust.users");
+			String[] names = userList.split(" ");
+			for (int i=0; i<=names.length; i++) {
+				if (n.equalsIgnoreCase(names[i])) return true;
+			}
+	
+		} else {
+			users = getUsers(getDefaultChannel());
+		}
 		for(int j =0; j<users.length; j++)
 			if(n.equalsIgnoreCase(users[j].getNick()))  return true;
 		
@@ -436,7 +452,7 @@ public class ZenCat extends PircBot {
 		if (method.equals("help")) {
 			sendMessage(defaultChannel, "MEOW MEOW MEOW MEOW");
 			String helpText = new String();
-			helpText = "I am the zencat. I send messages to IRC from Zenoss. You can also interact with Zenoss through me. To see all events, type !events. To acknowledge an event, type !ack [eventID].";
+			helpText = "I am the zencat. I send messages to IRC from Zenoss. You can also interact with Zenoss through me. To see all events, type !events. To acknowledge an event, type !ack [eventID]. To set an event back to new, type !unAck [eventID]. To close an event, type !close [eventID].";
 			sendMessage(defaultChannel, helpText);
 		}
 

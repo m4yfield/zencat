@@ -16,6 +16,12 @@
 		<username>admin</username>
 		<password>zenoss</password>
 	</zenoss>
+
+	<trust>
+		<!-- a list of users to accept commands from- set to true to accept from anyone in the bot's channel -->
+		<trusted>true</trusted>
+		<users>alice bob</users>
+	</trust>
 	
 	<bot>
 		<nick>zencat</nick>
