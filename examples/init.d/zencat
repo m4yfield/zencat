@@ -52,9 +52,16 @@ case "$1" in
 			-f $ZENCAT_HOME/build.xml run
 	echo "$NAME."
 	;;
+  status)
+	if [ -e $PIDFILE ]; then
+		echo "zencat is running"
+	else
+		echo "zencat is stopped"
+	fi
+	;;
   *)
 	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
 	exit 1
 	;;
 esac
