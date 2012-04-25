@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
+    with this program; if not, write to the Free Software Foundation, Inc.
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 package com.ls.zencat;
@@ -39,7 +39,10 @@ public class ZenCat extends PircBot {
 	private int maxCmdResponseLines = 26;
 	private XMLConfiguration config;
 
-	private JsonApi ja = new JsonApi();
+	private JsonApi ja;
+	private String instance;
+	private String user;
+	private String password;
 
 	public static void main(String[] args) throws Exception {
 		try {
@@ -65,8 +68,7 @@ public class ZenCat extends PircBot {
 				if (bot.getCatIP() != null)
 					inet = InetAddress.getByName(bot.getCatIP());
 			} catch (UnknownHostException ex) {
-				System.out
-						.println("Could not resolve config cat.ip, fix your config");
+				System.out.println("Could not resolve config cat.ip, fix your config");
 				ex.printStackTrace();
 				System.exit(2);
 			}
@@ -112,6 +114,10 @@ public class ZenCat extends PircBot {
 		setFinger(config.getString("bot.finger",
 				"ZenCat - a zenoss IRC bot"));
 
+		instance = config.getString("zenoss.instance");
+		user = config.getString("zenoss.username");
+		password = config.getString("zenoss.password");
+		ja = new JsonApi(instance,user,password);
 
 		try {
 			// connect to server
@@ -157,8 +163,7 @@ public class ZenCat extends PircBot {
 	protected void onConnect() {
 
 		// join channels
-		List<HierarchicalConfiguration> chans = config
-				.configurationsAt("channels.channel");
+		List<HierarchicalConfiguration> chans = config.configurationsAt("channels.channel");
 		for (HierarchicalConfiguration chan : chans) {
 			System.out.println("/join #" + chan.getString("name"));
 			joinChannel("#" + chan.getString("name") + " "
@@ -268,8 +273,8 @@ public class ZenCat extends PircBot {
 		String cmd;
 		String respondTo = channel_ == null ? sender : channel_;
 		
-		
-		
+	
+	
 		if (message.startsWith(nick)) {
 			// someone said something to us.
 			// we don't care!
@@ -307,7 +312,7 @@ public class ZenCat extends PircBot {
             System.out.println("UNTRUSTED (ignoring): ["+respondTo+"] <"+sender+"> "+message);
             return;
         }
-		
+	
 		// now "cmd" contains the message, minus the address prefix (eg: ?)
 		// hand off msg to thread that executes shell script
         System.out.println("Scripter: ["+respondTo+"] <"+sender+"> "+message);
@@ -367,7 +372,7 @@ public class ZenCat extends PircBot {
 				} else {
 					resultString = "Failed to ACK event: " + evid;
 				}
-				sendNotice("#noc", resultString);
+				sendNotice(defaultChannel, resultString);
 			} catch (Exception e) {
 				return e.getMessage();
 			}
@@ -384,30 +389,27 @@ public class ZenCat extends PircBot {
                                 } else {
                                         resultString = "Failed to un-ACK event: " + evid;
                                 }
-                                sendNotice("#noc", resultString);
+                                sendNotice(defaultChannel, resultString);
                         } catch (Exception e) {
                                 return e.getMessage();
                         }
                 }
 
-<<<<<<< HEAD
 		// CLOSE AN EVENT
 		if (method.equals("close") && toks.length == 2) {
 			String evid = toks[1];
 			try { 
 				JSONObject json = ja.closeEvent(evid);
-				sendNotice("#noc", json.toString());
+				sendNotice(defaultChannel, json.toString());
 			} catch (Exception e) {
 				return e.getMessage();
 			}
 		}
 
-=======
->>>>>>> 1d88f6a8fb69e418d3175c92994b7aadb5812fb0
 		// SHOW ALL EVENTS
 		if (method.equals("events")) {
-			sendMessage("#noc", "ALL CURRENT ZENOSS EVENTS:");
-			sendMessage("#noc", "severity | eventID | device: summary (state)");
+			sendMessage(defaultChannel, "ALL CURRENT ZENOSS EVENTS:");
+			sendMessage(defaultChannel, "severity | eventID | device: summary (state)");
 			try {
 				JSONObject json = ja.getEvents();
 				// Loop through the array
@@ -423,21 +425,19 @@ public class ZenCat extends PircBot {
 						String severity = event.get("severity").toString();
 						String eventState = event.get("eventState").toString();
 						String eventSummary = severity + " | " + evid + " | " + deviceString + ": " + summary + " (" + eventState + ")"; 
-						sendMessage("#noc", eventSummary);
-						//sendMessage("#noc", events.get(i).toString());
+						sendMessage(defaultChannel, eventSummary);
 					}
 				}
-				//sendMessage("#noc", ja.getEvents().toString());
 			} catch (Exception e) {
 				return e.getMessage();
 			}
 		}
 
 		if (method.equals("help")) {
-			sendMessage("#noc", "MEOW MEOW MEOW MEOW");
+			sendMessage(defaultChannel, "MEOW MEOW MEOW MEOW");
 			String helpText = new String();
 			helpText = "I am the zencat. I send messages to IRC from Zenoss. You can also interact with Zenoss through me. To see all events, type !events. To acknowledge an event, type !ack [eventID].";
-			sendMessage("#noc", helpText);
+			sendMessage(defaultChannel, helpText);
 		}
 
 		// EXIT()

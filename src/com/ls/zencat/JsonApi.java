@@ -39,9 +39,9 @@ import org.json.simple.parser.JSONParser;
 
 public class JsonApi {
 
-    private final static String ZENOSS_INSTANCE = "http://10.0.2.15:8080";
-    private final static String ZENOSS_USERNAME = "admin";
-    private final static String ZENOSS_PASSWORD = "zenoss";
+    private String ZENOSS_INSTANCE = "http://zenoss.company.com:8080";
+    private String ZENOSS_USERNAME = "admin";
+    private String ZENOSS_PASSWORD = "password";
 
     private final static HashMap ROUTERS = new HashMap();
     static {
@@ -64,8 +64,12 @@ public class JsonApi {
     private int reqCount = 1;
 
     // Constructor logs in to the Zenoss instance (getting the auth cookie)
-    public JsonApi() throws Exception {
-        HttpPost httpost = new HttpPost(ZENOSS_INSTANCE +
+    public JsonApi(String instance, String username, String password) throws Exception {
+	ZENOSS_INSTANCE = instance;
+	ZENOSS_USERNAME = username;
+	ZENOSS_PASSWORD = password;        
+
+	HttpPost httpost = new HttpPost(ZENOSS_INSTANCE +
                            "/zport/acl_users/cookieAuthHelper/login");
 
         List <NameValuePair> nvps = new ArrayList <NameValuePair>();
@@ -165,7 +169,6 @@ public class JsonApi {
 	return (JSONObject) this.routerRequest("EventsRouter", "unacknowledge", data).get("result");
     }
 
-<<<<<<< HEAD
     // CLOSE ZENOSS EVENT
     public JSONObject closeEvent(String evid) throws Exception {
 	HashMap data = new HashMap();
@@ -175,8 +178,6 @@ public class JsonApi {
 	return (JSONObject) this.routerRequest("EventsRouter", "close", data).get("result");
     }
 
-=======
->>>>>>> 1d88f6a8fb69e418d3175c92994b7aadb5812fb0
     public JSONObject getEvents() throws Exception {
         return getEvents(null, null, null);
     }

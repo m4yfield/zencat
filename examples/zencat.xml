@@ -9,6 +9,13 @@
         <!-- to identify with nickserv: -->
         <!-- <identify>somepass</identify> -->
 	</server>
+
+	<!-- The zenoss instance -->
+	<zenoss>
+		<instance>http://10.0.2.15:8080</instance>
+		<username>admin</username>
+		<password>zenoss</password>
+	</zenoss>
 	
 	<bot>
 		<nick>zencat</nick>
